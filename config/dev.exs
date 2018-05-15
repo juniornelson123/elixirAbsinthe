@@ -59,8 +59,10 @@ config :phoenix, :stacktrace_depth, 20
 # Configure your database
 config :plate_slate, PlateSlate.Repo,
   adapter: Ecto.Adapters.Postgres,
-  username: "mac",
-  password: "123456",
+  # username: "mac",
+  # password: "123456",
+  username: "junior",
+  password: "junior123",
   database: "plate_slate_dev",
   hostname: "localhost",
   pool_size: 10

@@ -1,10 +1,25 @@
 defmodule PlateSlateWeb.Schema do
   use Absinthe.Schema
-  import Logger
 
   alias PlateSlateWeb.MenuResolver
+  alias PlateSlateWeb.OrderingResolver
 
   import_types __MODULE__.MenuTypes
+  import_types __MODULE__.OrderingTypes
+
+  subscription do
+    field :new_order, :order do
+
+      config fn _args, _info ->
+        {:ok, topic: "*"}
+      end
+
+      resolve fn root, _, _ ->
+        IO.inspect(root)
+        {:ok, root}
+      end
+    end
+  end
 
   query do
     field :menu_items, list_of(:menu_item) do
@@ -24,6 +39,11 @@ defmodule PlateSlateWeb.Schema do
       arg :input, non_null(:menu_item_input)
       resolve &MenuResolver.create_item/3
     end
+
+    field :place_order, :order_result do
+      arg :input, non_null(:place_order_input)
+      resolve &OrderingResolver.place_order/3
+    end
   end
 
   scalar :date do
@@ -41,7 +61,6 @@ defmodule PlateSlateWeb.Schema do
 
   scalar :decimal do
     parse fn %{value: value} ->
-      Logger.info(value)
       Decimal.parse(value)
     end
     serialize &to_string/1

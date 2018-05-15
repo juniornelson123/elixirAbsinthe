@@ -20,8 +20,10 @@ config :logger, level: :warn
 # Configure your database
 config :plate_slate, PlateSlate.Repo,
   adapter: Ecto.Adapters.Postgres,
-  username: "mac",
-  password: "123456",
+  # username: "mac",
+  # password: "123456",
+  username: "junior",
+  password: "junior123",
   database: "plate_slate_test",
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox

@@ -7,7 +7,7 @@ defmodule PlateSlate.Ordering do
   alias PlateSlate.Repo
 
   alias PlateSlate.Ordering.Order
-
+  require Logger
   @doc """
   Returns the list of orders.
 
@@ -50,9 +50,21 @@ defmodule PlateSlate.Ordering do
 
   """
   def create_order(attrs \\ %{}) do
+    attrs = Map.update(attrs, :items, [], &build_items/1)
+
+
     %Order{}
     |> Order.changeset(attrs)
     |> Repo.insert()
+  end
+
+  defp build_items(items) do
+    for item <- items do
+      Logger.info(inspect(item))
+      IO.puts "imprimindo algo"
+      menu_item = PlateSlate.Menu.get_item!(item.menu_item_id)
+      %{name: menu_item.name, quantity: item.quantity, price: menu_item.price}
+    end
   end
 
   @doc """
