@@ -28,6 +28,7 @@ defmodule PlateSlateWeb.UserSocket do
   # See `Phoenix.Token` documentation for examples in
   # performing token verification on connect.
   def connect(_params, socket) do
+    # socket = Absinthe.Phoenix.Socket.put_schema(socket, PlateSlateWeb.Schema)
     {:ok, socket}
   end
 

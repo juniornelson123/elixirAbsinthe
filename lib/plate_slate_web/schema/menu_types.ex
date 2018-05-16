@@ -63,6 +63,7 @@ defmodule PlateSlateWeb.Schema.MenuTypes do
 
   end
 
+
   object :menu_item do
     interfaces [:search_result]
     field :id, non_null(:id)
@@ -79,6 +80,12 @@ defmodule PlateSlateWeb.Schema.MenuTypes do
 
       resolve &MenuResolver.all_menu_items/3
     end
+  end
+
+  input_object :menu_item_update_input do
+    field :name, :string
+    field :description, :string
+    field :price, :decimal
   end
 
   input_object :menu_item_input do

@@ -7,11 +7,37 @@ defmodule PlateSlateWeb.Schema do
   import_types __MODULE__.MenuTypes
   import_types __MODULE__.OrderingTypes
 
+  object :test do
+    field :name, :string
+  end
+
   subscription do
     field :new_order, :order do
 
       config fn _args, _info ->
-        {:ok, topic: "*"}
+        {:ok, topic: "pedido"}
+      end
+
+      trigger :place_order, topic: fn _ ->
+        "pedido"
+      end
+
+      resolve fn root, _, _ ->
+        IO.inspect(root)
+        {:ok, root.order}
+      end
+    end
+
+    field :update_item, :menu_item do
+      arg :id, non_null(:id)
+
+      config fn args, _ ->
+        {:ok, topic: args.id}
+      end
+
+      trigger :update_menu_item, topic: fn item ->
+        IO.inspect(item.id)
+        item.id
       end
 
       resolve fn root, _, _ ->
@@ -35,6 +61,13 @@ defmodule PlateSlateWeb.Schema do
   end
 
   mutation do
+    field :update_menu_item, :menu_item do
+      arg :id, :id
+      arg :input, :menu_item_update_input
+
+      resolve &MenuResolver.update_item/3
+    end
+
     field :create_menu_item, :menu_item do
       arg :input, non_null(:menu_item_input)
       resolve &MenuResolver.create_item/3
@@ -42,6 +75,7 @@ defmodule PlateSlateWeb.Schema do
 
     field :place_order, :order_result do
       arg :input, non_null(:place_order_input)
+
       resolve &OrderingResolver.place_order/3
     end
   end
